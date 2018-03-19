@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <http:listener-config name="HTTP_Listener_Configuration" host="localhost" port="5005" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration" protocol="HTTPS" host="apis.bbva.com" port="443" doc:name="HTTP Request Configuration"/>
+    <http:listener-config name="HTTP_Listener_Configuration1" host="localhost" port="5001" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration1" protocol="HTTPS" host="apis.bbva.com" port="443" doc:name="HTTP Request Configuration"/>
+    <http:listener-config name="HTTP_Listener_Configuration2" host="localhost" port="5002" doc:name="HTTP Listener Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration2" protocol="HTTPS" host="apis.bbva.com" port="443" doc:name="HTTP Request Configuration"/>
+    <http:listener-config name="HTTP_Listener_Configuration3" host="localhost" port="5000" doc:name="HTTP Listener Configuration"/>
+    <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" database="sonrai" doc:name="MySQL Configuration"/>
+    <flow name="bbvaintegrationFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/accounts-sbx/v1/me/accounts/ES0182002000000000500000000332067033XXXXXXXXX/transactions" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.awguXgpUSjckYK2H85Cxf9mT2IF6-ZDL5MixDjdxx3ebMefGWvsX8Ab8QuXAS6YWlvT16Buss2NNw0mFfjGfUXAZLvRuSbqFhufGYqKaETNPy9nt9rY8ZMVOPLPjSI9wTu0k9h3JcP5NQbZ-3cLHuoMcOP9OC-_caWzclEJWap4oXCLxE35QMkfu2sjM-v6n9BCZNCkH0dnexCtvCy7H15YQGCmmCD6fquzkqmi05Nr157dCSAW9IJjlOBt5YMnvtXaHtmfyVhciMilZ7AVmkFST5fzHWcs3kioepFWJ86deq_W7Q1RuY1L7T_VRxdUGQjTohvzvKfMziPdA5Rb8WQ.TFIkPTwRpUpsC2h2.4ZDGE8q_0or6Xm4Fyj8ohfG9qaApHC1p9Lj29Y0uwShZq4HcWAoWXLaP8zTEYDn1hJAaM6IM-FxrBaneGVeLFj2UQXq1Xp8mVI7TRXBxHK3uhiTqexgomKlUBAHMoeQ-N-Ow0gUgoTqUB8HNHIZr4bzGr449AflvXLZAYlF8RGKq8viQR22AkpZ4kmK19_cmgyeh0I0AVHIy4ld0dN1JQm9g3zpkMXpiOBfqw3E9_jB_hmUAVlHB9pxBj2o941NhQDTAL1qVe-ITK-yvK5XET7m8bi5UHDE9iCvQvTzsyuPm6PP9xenK5_CN0Apr38z_.wekHZice6rtZ5rrMkh2_-Q"/>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <logger message="#[message]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="bbvaintegrationFlow1">
+        <http:listener config-ref="HTTP_Listener_Configuration1" path="/" doc:name="HTTP"/>
+        <http:request config-ref="HTTP_Request_Configuration1" path="/accounts-sbx/v1/me/accounts" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.awguXgpUSjckYK2H85Cxf9mT2IF6-ZDL5MixDjdxx3ebMefGWvsX8Ab8QuXAS6YWlvT16Buss2NNw0mFfjGfUXAZLvRuSbqFhufGYqKaETNPy9nt9rY8ZMVOPLPjSI9wTu0k9h3JcP5NQbZ-3cLHuoMcOP9OC-_caWzclEJWap4oXCLxE35QMkfu2sjM-v6n9BCZNCkH0dnexCtvCy7H15YQGCmmCD6fquzkqmi05Nr157dCSAW9IJjlOBt5YMnvtXaHtmfyVhciMilZ7AVmkFST5fzHWcs3kioepFWJ86deq_W7Q1RuY1L7T_VRxdUGQjTohvzvKfMziPdA5Rb8WQ.TFIkPTwRpUpsC2h2.4ZDGE8q_0or6Xm4Fyj8ohfG9qaApHC1p9Lj29Y0uwShZq4HcWAoWXLaP8zTEYDn1hJAaM6IM-FxrBaneGVeLFj2UQXq1Xp8mVI7TRXBxHK3uhiTqexgomKlUBAHMoeQ-N-Ow0gUgoTqUB8HNHIZr4bzGr449AflvXLZAYlF8RGKq8viQR22AkpZ4kmK19_cmgyeh0I0AVHIy4ld0dN1JQm9g3zpkMXpiOBfqw3E9_jB_hmUAVlHB9pxBj2o941NhQDTAL1qVe-ITK-yvK5XET7m8bi5UHDE9iCvQvTzsyuPm6PP9xenK5_CN0Apr38z_.wekHZice6rtZ5rrMkh2_-Q"/>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+    </flow>
+    <flow name="bbvaintegrationFlow2">
+        <http:listener config-ref="HTTP_Listener_Configuration2" path="/" doc:name="HTTP"/>
+        <custom-transformer class="sonraiguru.SplitDates" doc:name="Java"/>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <http:request config-ref="HTTP_Request_Configuration2" path="/accounts-sbx/v1/me/accounts/ES0182002000000000500000000332067033XXXXXXXXX/transactions?dateFrom=#[flowVars.dateFrom]&amp;dateTo=#[flowVars.dateTo]" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.bEQzrw_KmZbpHIJEL_UG8Dbet0s_grnFEQ7aV6OFADKdBXNYkV6WU5oOmEcyv6DOKiJ0g9nY8K7AeRC0NtmPXFwGB-5eWW_Dz1xNYGHS_DBHeIZN7na7zMczUrp4NzPkqwbLGTI1eUDtILDnk43cBC741ztx4XUELdr9WK9U8wzYOu49xzBNn3dxcaxNmF8ApuSUlEmW6k0uy6dsPzGKRtVrTFez8I20p9a0ZBzog75rdXZI-gLKEEtC9Zk9PF_3pBlUFP7YAHEhpDrlOKAz9D0q7pVCiFXxe8pYzl8A2FuDrGJGm_eklo-oZIeZsYEG614ibouIMWGjcR8q19cSCA.ung1GIMiv5x3kS6l.qjs3eDfnpLIse3TuKKHdadH693G4iy1XUcGmUK-Z9-bI4C18gJfm5r2cRdX9wfW7uC3h1er3CQ9RdQMB5KGWoioHsq9rUHvZasgy36MQPvquEGThAOanHrI4f6cLGuO5SaMVzdsBkG-bZ5TI4efPgEXRoJEdfWPJDkJN4oR-bRrwHvNslCyhz3FQdjFt9FSA9ZeKtBcbuMPr-4dB5rcrA1AFu6zvraEnvzX5i0ovHQdQik2nODcvsbNOfkBs051rKZ0aKOqUd7VJtcbLWjNTmmJgCT3CyTYwB17G0-dgRLpWL8s4n9rhQy0Va9hdUBUa.5qUFQLD6L-OSmBT7nd43-Q"/>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <set-payload value="#[payload.data.accountTransactions]" doc:name="Set Payload"/>
+        <set-variable variableName="outputAmount" value="#[new java.util.ArrayList()]" doc:name="AmountVariable"/>
+        <set-variable variableName="outputDate" value="#[new java.util.ArrayList()]" doc:name="Variable"/>
+        <foreach collection="#[payload]" doc:name="For Each">
+            <logger message="#[payload.amount],#[payload.valueDate]" level="INFO" doc:name="Logger"/>
+            <expression-transformer expression="#[flowVars.outputAmount.add(payload.amount)]" doc:name="Expression"></expression-transformer>
+        </foreach>
+        <foreach collection="#[payload]" doc:name="For Each">
+            <expression-transformer expression="#[flowVars.outputDate.add(payload.valueDate)]" doc:name="Expression"/>
+            <logger message="#[flowVars.outputDate]" level="INFO" doc:name="Logger"/>
+        </foreach>
+        <logger message="#[flowVars.outputAmount]" level="INFO" doc:name="Logger"/>
+        <logger message="#[flowVars.outputAmount.toString()]" level="INFO" doc:name="Logger"/>
+        <set-payload value="#[flowVars.outputAmount.toString()],
+#[flowVars.outputDate.toString()]" doc:name="Set Payload"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
+    </flow>
+    <flow name="sonraiguruFlow">
+        <http:listener config-ref="HTTP_Listener_Configuration3" path="/login" doc:name="HTTP"/>
+        <custom-transformer class="sonraiguru.loginProcessor" doc:name="Java"/>
+        <db:select config-ref="MySQL_Configuration" doc:name="Database">
+            <db:parameterized-query><![CDATA[SELECT user_name FROM users WHERE user_name = #[flowVars.userName] AND password = #[flowVars.passWord];]]></db:parameterized-query>
+        </db:select>
+        <choice doc:name="Choice">
+            <when expression="#[payload != empty] ">
+                <set-payload value="successful login" doc:name="Valid-Login"/>
+            </when>
+            <otherwise>
+                <set-payload value="Invalid" doc:name="Invalid-Login"/>
+            </otherwise>
+        </choice>
+        <object-to-string-transformer doc:name="Object to String"/>
+    </flow>
+</mule>
