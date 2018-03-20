@@ -17,6 +17,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
     <http:request-config name="HTTP_Request_Configuration2" protocol="HTTPS" host="apis.bbva.com" port="443" doc:name="HTTP Request Configuration"/>
     <http:listener-config name="HTTP_Listener_Configuration3" host="localhost" port="5000" doc:name="HTTP Listener Configuration"/>
     <db:mysql-config name="MySQL_Configuration" host="localhost" port="3306" user="root" database="sonrai" doc:name="MySQL Configuration"/>
+    <http:request-config name="HTTP_Request_Configuration3" protocol="HTTPS" host="apis.bbva.com" port="443" doc:name="HTTP Request Configuration"/>
     <flow name="bbvaintegrationFlow">
         <http:listener config-ref="HTTP_Listener_Configuration" path="/" doc:name="HTTP"/>
         <logger message="#[payload]" level="INFO" doc:name="Logger"/>
@@ -30,12 +31,20 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
     </flow>
     <flow name="bbvaintegrationFlow1">
         <http:listener config-ref="HTTP_Listener_Configuration1" path="/" doc:name="HTTP"/>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
         <http:request config-ref="HTTP_Request_Configuration1" path="/accounts-sbx/v1/me/accounts" method="GET" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.awguXgpUSjckYK2H85Cxf9mT2IF6-ZDL5MixDjdxx3ebMefGWvsX8Ab8QuXAS6YWlvT16Buss2NNw0mFfjGfUXAZLvRuSbqFhufGYqKaETNPy9nt9rY8ZMVOPLPjSI9wTu0k9h3JcP5NQbZ-3cLHuoMcOP9OC-_caWzclEJWap4oXCLxE35QMkfu2sjM-v6n9BCZNCkH0dnexCtvCy7H15YQGCmmCD6fquzkqmi05Nr157dCSAW9IJjlOBt5YMnvtXaHtmfyVhciMilZ7AVmkFST5fzHWcs3kioepFWJ86deq_W7Q1RuY1L7T_VRxdUGQjTohvzvKfMziPdA5Rb8WQ.TFIkPTwRpUpsC2h2.4ZDGE8q_0or6Xm4Fyj8ohfG9qaApHC1p9Lj29Y0uwShZq4HcWAoWXLaP8zTEYDn1hJAaM6IM-FxrBaneGVeLFj2UQXq1Xp8mVI7TRXBxHK3uhiTqexgomKlUBAHMoeQ-N-Ow0gUgoTqUB8HNHIZr4bzGr449AflvXLZAYlF8RGKq8viQR22AkpZ4kmK19_cmgyeh0I0AVHIy4ld0dN1JQm9g3zpkMXpiOBfqw3E9_jB_hmUAVlHB9pxBj2o941NhQDTAL1qVe-ITK-yvK5XET7m8bi5UHDE9iCvQvTzsyuPm6PP9xenK5_CN0Apr38z_.wekHZice6rtZ5rrMkh2_-Q"/>
+                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.VTICLR4yeB6ZDdeqDwCpv-WpFONzvDYTyyoQb05Vs8G2ox2F_Wq7Bj2BaFJZXN9a7ouLoAYNWuPLwX7JW-L6nUv7jLew-T-9Yd3jNcEV9DuqhFzng2ZrQ3sTU1Yi29NkgGyb-ujgc2FgNq6OPSt0acQXP-uo44h8JkPR3-6Znx9hLgyPN83GukcDw74lW2O-UjModgBR-ctlAKyZuEVC2hsf6rtUmZQJ7osJpakcddDQ_4ixxCoqXWLFikKhY7bY4p1hWjBGnQrwzcY0zxj71Qg8V9cXRF5MyCBA2U1ySFOmBpK-PuACXqizkg4FaQLMsor4nD5D1bYibf5ZRJLp8w.gxv7rGpeOGiaVHtX.NS5JEzKmA_H7LfPkMkgiRFmSEDDIpzeH7A4n1y0VAHvKXovdqVwx96bU-1b44sIq47l4relAC6bBmW4I7X0y9kcMmgzUODbolIuNVVv4uO3Kbea3X3ytanhLTVNzEUSBFJoLq7Z4H3mFWPnm33OjNSiWDPzYEHjAQIp6HUBUHvJr2_o_WL-yq8wlv0w7NPm--qlKZ0SzsbywDAvfCGZkG39sCNhprXDHXN0toolohSvD0PDnsCd16Y79NHkvsyslYrutWg-q5oPqoBAbOmyz_alDhSBFs4QwWV76oEB0ko1-_EpxKcbjuvjUhQdD3Kr4lA.6Y3FShy85q6O40WpoCbVkQ"/>
                 <http:header headerName="Accept" value="application/json"/>
+
             </http:request-builder>
         </http:request>
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <set-payload value="#[payload.data]" doc:name="Set Payload"/>
+        <logger message="#[payload.accounts[2].balance]" level="INFO" doc:name="Logger"/>
+        <set-payload value="#[payload.accounts[2].balance]" doc:name="Set Payload"/>
+        <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
     <flow name="bbvaintegrationFlow2">
         <http:listener config-ref="HTTP_Listener_Configuration2" path="/" doc:name="HTTP"/>
@@ -43,8 +52,9 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         <logger message="#[payload]" level="INFO" doc:name="Logger"/>
         <http:request config-ref="HTTP_Request_Configuration2" path="/accounts-sbx/v1/me/accounts/ES0182002000000000500000000332067033XXXXXXXXX/transactions?dateFrom=#[flowVars.dateFrom]&amp;dateTo=#[flowVars.dateTo]" method="GET" doc:name="HTTP">
             <http:request-builder>
-                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.bEQzrw_KmZbpHIJEL_UG8Dbet0s_grnFEQ7aV6OFADKdBXNYkV6WU5oOmEcyv6DOKiJ0g9nY8K7AeRC0NtmPXFwGB-5eWW_Dz1xNYGHS_DBHeIZN7na7zMczUrp4NzPkqwbLGTI1eUDtILDnk43cBC741ztx4XUELdr9WK9U8wzYOu49xzBNn3dxcaxNmF8ApuSUlEmW6k0uy6dsPzGKRtVrTFez8I20p9a0ZBzog75rdXZI-gLKEEtC9Zk9PF_3pBlUFP7YAHEhpDrlOKAz9D0q7pVCiFXxe8pYzl8A2FuDrGJGm_eklo-oZIeZsYEG614ibouIMWGjcR8q19cSCA.ung1GIMiv5x3kS6l.qjs3eDfnpLIse3TuKKHdadH693G4iy1XUcGmUK-Z9-bI4C18gJfm5r2cRdX9wfW7uC3h1er3CQ9RdQMB5KGWoioHsq9rUHvZasgy36MQPvquEGThAOanHrI4f6cLGuO5SaMVzdsBkG-bZ5TI4efPgEXRoJEdfWPJDkJN4oR-bRrwHvNslCyhz3FQdjFt9FSA9ZeKtBcbuMPr-4dB5rcrA1AFu6zvraEnvzX5i0ovHQdQik2nODcvsbNOfkBs051rKZ0aKOqUd7VJtcbLWjNTmmJgCT3CyTYwB17G0-dgRLpWL8s4n9rhQy0Va9hdUBUa.5qUFQLD6L-OSmBT7nd43-Q"/>
+                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.B77-vCv3a56XLQzqQpdISy5Ag26Ig8iLLnI7dI-86fZXFyOqj3CWO9_kwBFBF3XBVIm0YN17-T-xE1q2Jy72acUi-62EHIorEpixpj-TWaEKMJyU1egWhSh6IuyRuT6V8rSP_Spl4O3GcQgdxVmn4aC801XlVMv1HUJS-Hg8GDEiyxFrcSVAskY_MkoaRy0YqzVZ0or-geBKs8yfC0qlNueMN1suLfO4d1QfHalJ38_RCpwbft51zUfsXEnvb7k380QBrYFONs3Z4KG53RT9xr5J_2_NJYtDvipm05Gm7Zfb28aiYGc1VgGj4-Ff9UzBXq3kyV0zMNLr2K4atetIQQ.VTU9kYH0x7_iSDNI.Vmk1F3v3Q1xF0F61ulPQPXxbYZmERLyKnlyWJZlV8rOakYsc2s1InqgkOALqWs6_nancHZg-Gmekh5eSrJw0u3lO3zzyErEhryc7tP7IKQ1dW-LkMMJNXyYh0EFuISQs7k-6epa_bAegZtrdvbbkSi7vhPoXYG9wwVfloEtQlvF5S2gJi0WVQkUBVwVc26nndd9sIV1X54up_XopLT3r7uyvHwLqAmbanhMcMap9xhxc_-LPc3x9JG_xrkPcDcm5m32tfb6WADO4tIRp-9y8db2hjDUHqwvFnqY4lZDQxKMNzaR_N9xTciRO86HWhOhBLQ.FtdfnyolLwiORVt1NQeS0g"/>
                 <http:header headerName="Accept" value="application/json"/>
+
             </http:request-builder>
         </http:request>
         <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
@@ -61,8 +71,18 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
         </foreach>
         <logger message="#[flowVars.outputAmount]" level="INFO" doc:name="Logger"/>
         <logger message="#[flowVars.outputAmount.toString()]" level="INFO" doc:name="Logger"/>
-        <set-payload value="#[flowVars.outputAmount.toString()],
-#[flowVars.outputDate.toString()]" doc:name="Set Payload"/>
+        <http:request config-ref="HTTP_Request_Configuration3" path="/accounts-sbx/v1/me/accounts" method="GET" doc:name="HTTP">
+            <http:request-builder>
+                <http:header headerName="Authorization" value="jwt eyJ6aXAiOiJERUYiLCJlbmMiOiJBMTI4R0NNIiwiYWxnIjoiUlNBLU9BRVAifQ.B77-vCv3a56XLQzqQpdISy5Ag26Ig8iLLnI7dI-86fZXFyOqj3CWO9_kwBFBF3XBVIm0YN17-T-xE1q2Jy72acUi-62EHIorEpixpj-TWaEKMJyU1egWhSh6IuyRuT6V8rSP_Spl4O3GcQgdxVmn4aC801XlVMv1HUJS-Hg8GDEiyxFrcSVAskY_MkoaRy0YqzVZ0or-geBKs8yfC0qlNueMN1suLfO4d1QfHalJ38_RCpwbft51zUfsXEnvb7k380QBrYFONs3Z4KG53RT9xr5J_2_NJYtDvipm05Gm7Zfb28aiYGc1VgGj4-Ff9UzBXq3kyV0zMNLr2K4atetIQQ.VTU9kYH0x7_iSDNI.Vmk1F3v3Q1xF0F61ulPQPXxbYZmERLyKnlyWJZlV8rOakYsc2s1InqgkOALqWs6_nancHZg-Gmekh5eSrJw0u3lO3zzyErEhryc7tP7IKQ1dW-LkMMJNXyYh0EFuISQs7k-6epa_bAegZtrdvbbkSi7vhPoXYG9wwVfloEtQlvF5S2gJi0WVQkUBVwVc26nndd9sIV1X54up_XopLT3r7uyvHwLqAmbanhMcMap9xhxc_-LPc3x9JG_xrkPcDcm5m32tfb6WADO4tIRp-9y8db2hjDUHqwvFnqY4lZDQxKMNzaR_N9xTciRO86HWhOhBLQ.FtdfnyolLwiORVt1NQeS0g"/>
+                <http:header headerName="Accept" value="application/json"/>
+            </http:request-builder>
+        </http:request>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <json:json-to-object-transformer returnClass="java.util.HashMap" doc:name="JSON to Object"/>
+        <set-variable variableName="myBalance" value="#[payload.data.accounts[2].balance]" doc:name="Variable"/>
+        <set-payload value="#[flowVars.outputAmount + flowVars.outputDate + flowVars.myBalance]" doc:name="Set Payload"/>
+
+        <logger message="[#[payload]" level="INFO" doc:name="Logger"/>
         <json:object-to-json-transformer doc:name="Object to JSON"/>
     </flow>
     <flow name="sonraiguruFlow">
